@@ -8,9 +8,9 @@ names = ["★조미형★ 생가", "션샤인랜드", "전라도음식이야기"
          "더블유하우스 팬션", "덕인관", "메타프로방스", "삐에스몽테제빵소",
          "메타세콰이어가로수길", "담양관방제림", "미소댓잎국수", "죽녹원", "인기명"]
 
+
 # Create your views here.
 def index(request):
-
     spots = []
     for idx, name in enumerate(names):
         image_infos = []
@@ -24,10 +24,12 @@ def index(request):
 
     return render(request, 'memory/index.html', {'spots': spots})
 
+
 def detail(request):
     spot = int(request.GET.get('spot'))
     images = ImageInfo.objects.filter(spot=spot).order_by('main')
     return render(request, 'memory/detail.html', {'spot': spot, "name": names[spot], "images": images})
+
 
 def rotate_image(path, angle):
     print(path)
@@ -42,6 +44,7 @@ def rotate_image(path, angle):
 
     return x
 
+
 def process_image(request):
     spot = int(request.GET.get('spot'))
     mode = request.GET.get('mode')
@@ -50,6 +53,7 @@ def process_image(request):
         image_info = ImageInfo.objects.filter(id=id)
         os.remove(image_info[0].image.path)
         image_info.delete()
+        return HttpResponse("")
     elif mode == "rotate":
         image_info = ImageInfo.objects.get(id=id)
         im = rotate_image(image_info.image.path, -90)
@@ -72,8 +76,8 @@ def process_image(request):
         image_info.main = 1
         image_info.save()
 
-
     return redirect(f'/memory/detail?spot={spot}', {'spot': spot})
+
 
 def upload(request):
     for image in request.FILES.getlist('image'):
@@ -84,4 +88,4 @@ def upload(request):
         imageInfo.main = 0
         imageInfo.save()
     spots = {}
-    return redirect('/memory', {'spots': spots})
+    return redirect(f'/memory/#spot-{imageInfo.spot}', {'spots': spots})

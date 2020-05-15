@@ -21,28 +21,26 @@
             <p class="lead">2020/05/09 ~ 2020/05/10</p>
         </div>
     </div>
-    <a href="/memory">
+    <a href="/memory/#spot-{{ spot }}">
         <button type="button" class="btn btn-primary form-control">메인 페이지로 가기</button>
     </a>
     <div class="card-columns">
         {% for image in images %}
-            <div class="card">
+            <div class="card" id="image-{{ image.id }}">
                 <img src="{{ image.image.url }}?revision={{ image.revision }}" class="card-img-top" alt="...">
                 <div class="card-body">
                     <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-                        <a href="/memory/process_image?spot={{ spot }}&mode=main&id={{ image.id }}">
-                            <button type="button" class="btn btn-secondary">메인등록</button>
-                        </a>
                         <div class="btn-group mr-2" role="group" aria-label="First group">
+                            <a href="/memory/process_image?spot={{ spot }}&mode=main&id={{ image.id }}">
+                                <button type="button" class="btn btn-secondary">메인등록</button>
+                            </a>
                             <a href="/memory/process_image?spot={{ spot }}&mode=reverse&id={{ image.id }}">
                                 <button type="button" class="btn btn-secondary">상하반전</button>
                             </a>
                             <a href="/memory/process_image?spot={{ spot }}&mode=rotate&id={{ image.id }}">
                                 <button type="button" class="btn btn-secondary">90°회전</button>
                             </a>
-                            <a href="/memory/process_image?spot={{ spot }}&mode=delete&id={{ image.id }}">
-                                <button type="button" class="btn btn-secondary">삭제</button>
-                            </a>
+                            <button type="button" class="btn btn-secondary" onclick="deleteAjax('{{ spot }}', '{{ image.id }}', 'delete')">삭제</button>
                         </div>
                     </div>
                 </div>
@@ -53,15 +51,27 @@
 
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
-        crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
         integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
         crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script>
+    function deleteAjax(spot, id, mode) {
+        let parameter = "process_image?spot=" + spot + "&id=" + id + "&mode=" + mode
+        $.ajax({
+                url: parameter,
+                success: function(data) {
+                    document.getElementById('image-' + id).remove()
+                },
+                error: function (data) {
+                }
+            },
+        )
+    }
+</script>
 <style>
     .thumbnail-wrappper {
         width: 25%;

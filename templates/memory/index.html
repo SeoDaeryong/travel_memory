@@ -22,7 +22,7 @@
         </div>
     </div>
     {% for spot in spots %}
-        <div class="accordion" id="accordionExample-{{ forloop.counter0 }}">
+        <div class="accordion" id="spot-{{ forloop.counter0 }}">
         <div class="card">
             <div class="card-header" id="headingOne-{{ forloop.counter0 }}">
                 <h2 class="mb-0">
@@ -36,7 +36,7 @@
 
             <div id="collapseOne-{{ forloop.counter0 }}" class="collapse show"
                  aria-labelledby="headingOne-{{ forloop.counter0 }}"
-                 data-parent="#accordionExample-{{ forloop.counter0 }}">
+                 data-parent="#spot-{{ forloop.counter0 }}">
                 <div class="card-body">
                     <div id="carouselExampleControls-{{ forloop.counter0 }}" class="carousel slide"
                          data-ride="carousel">

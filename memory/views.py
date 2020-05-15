@@ -14,7 +14,7 @@ def index(request):
     spots = []
     for idx, name in enumerate(names):
         image_infos = []
-        for info in ImageInfo.objects.filter(spot=idx).order_by('-main'):
+        for info in ImageInfo.objects.filter(spot=idx).order_by('main'):
             image_infos.append(info)
 
         if len(image_infos) > 0:
@@ -26,7 +26,7 @@ def index(request):
 
 def detail(request):
     spot = int(request.GET.get('spot'))
-    images = ImageInfo.objects.filter(spot=spot).order_by('-main')
+    images = ImageInfo.objects.filter(spot=spot).order_by('main')
     return render(request, 'memory/detail.html', {'spot': spot, "name": names[spot], "images": images})
 
 def rotate_image(path, angle):
@@ -52,11 +52,9 @@ def process_image(request):
         image_info.delete()
     elif mode == "rotate":
         image_info = ImageInfo.objects.get(id=id)
-        print(image_info.id)
         im = rotate_image(image_info.image.path, -90)
         im.save(image_info.image.path)
         image_info.revision = image_info.revision + 1
-        print(image_info.revision)
         image_info.save()
     elif mode == "reverse":
         image_info = ImageInfo.objects.get(id=id)
@@ -83,6 +81,7 @@ def upload(request):
         imageInfo.spot = request.POST.get("spot", None)
         imageInfo.image = image
         imageInfo.revision = 0
+        imageInfo.main = 0
         imageInfo.save()
     spots = {}
     return redirect('/memory', {'spots': spots})

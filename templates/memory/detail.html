@@ -30,6 +30,9 @@
                 <img src="{{ image.image.url }}?revision={{ image.revision }}" class="card-img-top" alt="...">
                 <div class="card-body">
                     <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                        <a href="/memory/process_image?spot={{ spot }}&mode=main&id={{ image.id }}">
+                            <button type="button" class="btn btn-secondary">메인등록</button>
+                        </a>
                         <div class="btn-group mr-2" role="group" aria-label="First group">
                             <a href="/memory/process_image?spot={{ spot }}&mode=reverse&id={{ image.id }}">
                                 <button type="button" class="btn btn-secondary">상하반전</button>

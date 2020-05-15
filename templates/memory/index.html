@@ -3,8 +3,8 @@
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-    <meta http-equiv="Expires" content="0" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+    <meta http-equiv="Expires" content="0"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
@@ -16,10 +16,10 @@
 <body>
 <div id="top">
     <div class="jumbotron jumbotron-fluid">
-      <div class="container">
-        <h1 class="display-4">담양 여행 스케치</h1>
-        <p class="lead">2020/05/09 ~ 2020/05/10</p>
-      </div>
+        <div class="container">
+            <h1 class="display-4">담양 여행 스케치</h1>
+            <p class="lead">2020/05/09 ~ 2020/05/10</p>
+        </div>
     </div>
     {% for spot in spots %}
         <div class="accordion" id="accordionExample-{{ forloop.counter0 }}">
@@ -43,14 +43,16 @@
                         <div class="carousel-inner thumbnail-wrappper">
                             <div class="thumbnail carousel-item active">
                                 <div class="centered">
-                                    <img src="{{ spot.main.image.url }}?revision={{ spot.main.revision }}" name="{{ spot.main.id }}"
+                                    <img src="{{ spot.main.image.url }}?revision={{ spot.main.revision }}"
+                                         name="{{ spot.main.id }}"
                                          class="d-block img-fluid" alt="responsive image">
                                 </div>
                             </div>
                             {% for image_info in spot.image_infos %}
                                 <div class="carousel-item thumbnail">
                                     <div class="centered">
-                                        <img src="{{ image_info.image.url }}?revision={{ image_info.revision }}" name="{{ image_info.id }}"
+                                        <img src="{{ image_info.image.url }}?revision={{ image_info.revision }}"
+                                             name="{{ image_info.id }}"
                                              class="d-block img-fluid" alt="responsive image">
                                     </div>
                                 </div>
@@ -70,21 +72,32 @@
                         </a>
                     </div>
                     <br>
-                    <form action="upload" method="post" enctype="multipart/form-data">
+                    <form id="form-{{ forloop.counter0 }}" action="upload" method="post" enctype="multipart/form-data">
                         <div class="form-row">
                             {% csrf_token %}
                             <input id="spot" name="spot" type="hidden" value="{{ forloop.counter0 }}"/>
-                            <div class="col-md-6 mb-3">
-                                <input id="image" type="file" class="form-control form-control-file" name="image"
-                                       multiple="multiple">
+                            <div class="input-group mb-3">
+
+                                <div class="custom-file">
+                                    <input type="file" name="image" class="custom-file-input" id="image-{{ forloop.counter0 }}"
+                                           aria-describedby="inputGroupFileAddon01">
+                                    <label class="custom-file-label" for="inputGroupFile01">사진 추가하기</label>
+                                </div>
                             </div>
-                            <div class="col-md-6 mb-3">
+                            <!-- <div class="filebox">
+                                <div class="col-md-12 mb-6">
+                                    <label for="ex_file">사진 추가하기</label>
+                                    <input id="image-{{ forloop.counter0 }}" name="image" type="file" class="image"
+                                           multiple="multiple">
+                                </div>
+                            </div> -->
+                            <!-- <div class="col-md-6 mb-3">
                                 <input type="submit" class="form-control btn btn-primary" value="사진 추가"/>
-                            </div>
+                            </div> -->
                         </div>
                     </form>
                     <a href="detail?spot={{ forloop.counter0 }}">
-                       <button type="button" class="form-control btn btn-secondary">사진 모아보기</button>
+                        <button type="button" class="form-control btn btn-secondary">사진 모아보기</button>
                     </a>
                 </div>
             </div>
@@ -104,6 +117,13 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
+<script>
+    {% for spot in spots %}
+        document.getElementById("image-{{ forloop.counter0 }}").onchange = function () {
+            document.getElementById("form-{{ forloop.counter0 }}").submit();
+        }
+    {% endfor %}
+</script>
 <style>
     .thumbnail-wrappper {
         width: 100%;
@@ -137,6 +157,49 @@
         transform: translate(0%, 0%);
     }
 
+    .custom-file label {
+        display: inline-block;
+        padding: .5em .75em;
+        color: #fff;
+        font-size: inherit;
+        line-height: normal;
+        vertical-align: middle;
+        background-color: #5cb85c;
+        cursor: pointer;
+        border: 1px solid #4cae4c;
+        border-radius: .25em;
+        -webkit-transition: background-color 0.2s;
+        transition: background-color 0.2s;
+        text-align: center;
+        margin: 0em .4em 0em .4em;
+    }
+
+    .custom-file label::after {
+        content: "";
+        background-color: #5cb85c;
+        border-left: #5cb85c;
+        border-radius: 0;
+    }
+
+    .filebox label:hover {
+        background-color: #6ed36e;
+    }
+
+    .filebox label:active {
+        background-color: #367c36;
+    }
+
+    .filebox input[type="file"] {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        border: 0;
+    }
+
     img.portrait {
         width: 100%;
         height: auto;
@@ -146,10 +209,12 @@
         width: auto;
         height: 100%;
     }
-        @media (min-width: 0px) {
+
+    @media (min-width: 0px) {
         .jumbotron h1 {
             font-size: 1.5rem;
         }
+
         .jumbotron p {
             font-size: 1.2rem;
         }
@@ -159,15 +224,18 @@
         .jumbotron h1 {
             font-size: 2rem;
         }
+
         .jumbotron p {
             font-size: 1.5rem;
         }
     }
+
     /* Small devices (tablets, 768px and up) */
     @media (min-width: 768px) {
         .jumbotron h1 {
             font-size: 3rem;
         }
+
         .jumbotron p {
             font-size: 1.5rem;
         }

@@ -14,7 +14,7 @@ def index(request):
     spots = []
     for idx, name in enumerate(names):
         image_infos = []
-        for info in ImageInfo.objects.filter(spot=idx).order_by('main'):
+        for info in ImageInfo.objects.filter(spot=idx).order_by('-main'):
             image_infos.append(info)
 
         if len(image_infos) > 0:
@@ -27,7 +27,7 @@ def index(request):
 
 def detail(request):
     spot = int(request.GET.get('spot'))
-    images = ImageInfo.objects.filter(spot=spot).order_by('main')
+    images = ImageInfo.objects.filter(spot=spot).order_by('-main')
     return render(request, 'memory/detail.html', {'spot': spot, "name": names[spot], "images": images})
 
 
@@ -69,9 +69,10 @@ def process_image(request):
     elif mode == "main":
         image_info = ImageInfo.objects.filter(main=1)
         if len(image_info) > 0:
-            image_info = ImageInfo.objects.get(id=image_info[0].id)
-            image_info.main = False
-            image_info.save()
+            for image in image_info:
+                image_info = ImageInfo.objects.get(id=image_info[0].id)
+                image_info.main = 0
+                image_info.save()
         image_info = ImageInfo.objects.get(id=id)
         image_info.main = 1
         image_info.save()
